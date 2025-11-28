@@ -51,15 +51,15 @@
       overflow:visible;
     }
 
-    /* Particles canvas sits behind content */
+    /* Particles canvas sits behind content (very subtle) */
     #particles {
       position:absolute;
       inset:0;
       z-index:0;
       pointer-events:none;
       mix-blend-mode:screen;
-      opacity:0.18;
-      filter: blur(10px) saturate(120%);
+      opacity:0.12;
+      filter: blur(8px) saturate(110%);
     }
 
     .hero-inner{
@@ -75,7 +75,7 @@
       backdrop-filter: blur(8px) saturate(120%);
       border: 1px solid rgba(255,255,255,0.03);
       box-shadow: 0 24px 80px rgba(2,6,23,0.7), inset 0 1px 0 rgba(255,255,255,0.02);
-      transition: transform 420ms cubic-bezier(.2,.9,.3,1);
+      /* NO pointer-based tilt here — intentionally static for clarity */
     }
 
     /* Left content */
@@ -115,7 +115,6 @@
     }
     .btn-primary{
       background: linear-gradient(90deg, #EAF6FF, #FFFFFF 35%); color: #061026; box-shadow: 0 18px 50px rgba(2,8,23,0.65);
-      transition: transform .22s cubic-bezier(.2,.9,.3,1), box-shadow .22s;
     }
     .btn-primary:hover{ transform: translateY(-4px); box-shadow: 0 26px 80px rgba(2,8,23,0.8); }
     .btn-ghost{ border:1px solid rgba(255,255,255,0.06); background: rgba(12,16,24,0.45); color:var(--text-muted); }
@@ -150,6 +149,9 @@
 
     svg.wave-svg{ width:100%; height:100%; display:block; }
 
+    /* Splash holder */
+    .splash-layer { position:absolute; left:0; right:0; bottom:0; height:48%; z-index:3; pointer-events:none; overflow:visible; }
+
     /* Subtle overlay "gloss" */
     .gloss{
       position:absolute;
@@ -177,7 +179,6 @@
 
 <body>
   <div class="hero-root" role="main" aria-labelledby="hero-title">
-    <!-- lightweight particles for atmosphere -->
     <canvas id="particles" aria-hidden="true"></canvas>
 
     <div class="hero-inner" id="hero-inner">
@@ -256,7 +257,6 @@
     </div>
 
     <div class="wave-container" aria-hidden="true">
-      <!-- Layered SVG waves: back, mid, front + foam overlay -->
       <svg class="wave-svg" viewBox="0 0 1400 400" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <linearGradient id="wback" x1="0" x2="1">
@@ -281,214 +281,254 @@
             <feGaussianBlur stdDeviation="18" result="g"/>
             <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
           </filter>
+
+          <!-- small radial for splash -->
+          <radialGradient id="splashGrad" cx="50%" cy="50%" r="60%">
+            <stop offset="0%" stop-color="rgba(255,255,255,0.95)"/>
+            <stop offset="45%" stop-color="rgba(255,255,255,0.35)"/>
+            <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+          </radialGradient>
         </defs>
 
-        <!-- Back wave -->
-        <path id="wave-back" fill="url(#wback)" opacity="0.95" d="M0,320 C200,300 400,330 700,320 C1000,310 1200,330 1400,320 L1400,400 L0,400 Z" style="filter:url(#waveBlur); transform-origin:center bottom;"></path>
+        <path id="wave-back" fill="url(#wback)" opacity="0.98" d="M0,320 C200,300 400,330 700,320 C1000,310 1200,330 1400,320 L1400,400 L0,400 Z" style="filter:url(#waveBlur);"></path>
+        <path id="wave-mid" fill="url(#wmid)" opacity="0.94" d="M0,330 C180,310 420,350 700,330 C980,310 1180,340 1400,330 L1400,400 L0,400 Z" style="mix-blend-mode:screen;"></path>
+        <path id="wave-front" fill="url(#wfront)" opacity="1" d="M0,340 C150,300 420,360 700,340 C980,320 1250,360 1400,340 L1400,400 L0,400 Z" style="filter:url(#softGlow);"></path>
 
-        <!-- Mid wave -->
-        <path id="wave-mid" fill="url(#wmid)" opacity="0.92" d="M0,330 C180,310 420,350 700,330 C980,310 1180,340 1400,330 L1400,400 L0,400 Z" style="mix-blend-mode:screen; transform-origin:center bottom;"></path>
-
-        <!-- Front (colored) wave -->
-        <path id="wave-front" fill="url(#wfront)" opacity="0.98" d="M0,340 C150,300 420,360 700,340 C980,320 1250,360 1400,340 L1400,400 L0,400 Z" style="filter:url(#softGlow); transform-origin:center bottom;"></path>
-
-        <!-- Foam / white crest highlight -->
-        <path id="wave-foam" fill="rgba(255,255,255,0.06)" d="M0,360 C120,340 360,380 700,360 C1040,340 1260,380 1400,360 L1400,400 L0,400 Z"></path>
+        <!-- foam overlay shape (we will animate opacity/transform on spawn) -->
+        <g id="foam-group" opacity="0.0" transform="translate(0,0)">
+          <path id="foam" fill="rgba(255,255,255,0.06)" d="M0,360 C120,340 360,380 700,360 C1040,340 1260,380 1400,360 L1400,400 L0,400 Z"></path>
+        </g>
       </svg>
     </div>
+
+    <!-- SVG layer to render lightweight splash circles (vector, low-cost) -->
+    <svg class="splash-layer" viewBox="0 0 1400 400" preserveAspectRatio="none" aria-hidden="true">
+      <g id="splash-root"></g>
+    </svg>
 
     <div class="gloss" aria-hidden="true"></div>
   </div>
 
   <script>
-  // Robust ultra-smooth waves + parallax + particles.
-  // Defensive: checks for missing elements, respects prefers-reduced-motion, uses devicePixelRatio for canvas.
+  // Focused wave + splash improvements.
+  // - No pointer-based tilt on text box
+  // - Smoother wave morph (low CPU) via sine blends + per-frame lerp smoothing
+  // - Small periodic splash pulses rendered as SVG circles (expand+fade)
+  // - Defensive checks, respects prefers-reduced-motion
   (function(){
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // small helper
-    function $(id){ return document.getElementById(id); }
+    function $id(id){ return document.getElementById(id); }
 
-    // WaveAnimator (defensive & efficient)
-    function WaveAnimator(paths){
-      this.paths = (paths || []).filter(p => p && p.el);
-      this.t = 0;
-      this.running = false;
-      this.raf = null;
-      this.animate = this.animate.bind(this);
+    // Smooth helper: linear interpolation
+    function lerp(a,b,t){ return a + (b - a) * t; }
+
+    // Build a low-cost wave "state" that we update and then smooth-apply to the SVG path.
+    function SmoothWave(el, opts){
+      this.el = el;
+      this.speed = opts.speed || 0.5;
+      this.amp = opts.amp || 20;
+      this.base = opts.base || 340;
+      this.phase = opts.phase || 0;
+      this.parallaxX = opts.parallaxX || 0;
+      // smoothed points (start from baseline)
+      this.current = null; // filled on first frame
+      this.target = null;
     }
-    WaveAnimator.prototype.start = function(){
-      if (prefersReduced) return;
-      if (!this.running){
-        this.running = true;
-        this.raf = requestAnimationFrame(this.animate);
+    SmoothWave.prototype.generateTarget = function(t){
+      const w = 1400;
+      const segments = 7; // modest number for smoothness and low CPU
+      const pts = [];
+      for (let i=0;i<=segments;i++){
+        const x = (i/segments)*w;
+        const f = i/segments;
+        // Combine two sine terms with different frequencies for organic flow
+        const y = this.base + this.amp * ( Math.sin((t * this.speed) + (f * 1.2) + this.phase) * 0.66
+                   + 0.36 * Math.sin((t * this.speed * 1.6) + (f * 2.7) + this.phase * 0.8) );
+        pts.push([x, y]);
+      }
+      this.target = pts;
+      if (!this.current) {
+        // initialize current to target to avoid popping
+        this.current = pts.map(p => [p[0], p[1]]);
       }
     };
-    WaveAnimator.prototype.stop = function(){
-      this.running = false;
-      if (this.raf) { cancelAnimationFrame(this.raf); this.raf = null; }
+    // Smoothly step current -> target (reduce jitter)
+    SmoothWave.prototype.step = function(smoothFactor){
+      if (!this.current || !this.target) return;
+      for (let i=0;i<this.current.length;i++){
+        this.current[i][1] = lerp(this.current[i][1], this.target[i][1], smoothFactor);
+      }
     };
-    WaveAnimator.prototype.animate = function(ts){
-      if (!this.running) return;
-      // approximate delta-based time
-      this.t += 0.016;
+    // Convert current points into a smooth SVG path
+    SmoothWave.prototype.pathD = function(){
+      if (!this.current) return '';
       const w = 1400, h = 400;
-      const segments = 9;
-      for (let p of this.paths){
-        if (!p.el) continue;
-        const pts = [];
-        for (let i=0;i<=segments;i++){
-          const x = (i/segments) * w;
-          const base = p.base + (p.amplitude * Math.sin((this.t * p.speed) + (i * 0.95) + (p.phase || 0)));
-          const extra = (p.amplitude * 0.22) * Math.sin((this.t * p.speed * 1.7) + (i * 1.6) + (p.phase || 0));
-          pts.push([x, base + extra]);
-        }
-        // build smooth path
-        let d = `M0,${h} L0,${pts[0][1]} `;
-        for (let i=0;i<pts.length-1;i++){
-          const [x1,y1] = pts[i];
-          const [x2,y2] = pts[i+1];
-          const cx = (x1 + x2)/2;
-          d += `Q ${x1},${y1} ${cx},${(y1+y2)/2} `;
-        }
-        const last = pts[pts.length-1];
-        d += `T ${w},${last[1]} L ${w},${h} Z`;
-        try {
-          p.el.setAttribute('d', d);
-          // parallax translate
-          const tx = Math.sin(this.t * p.speed * 0.42 + (p.phase||0)) * (p.parallaxX || 0);
-          p.el.style.transform = `translate3d(${tx}px,0,0)`;
-        } catch (err){
-          // keep running — skip element if it errors
-        }
+      const pts = this.current;
+      let d = `M0,${h} L0,${pts[0][1]} `;
+      for (let i=0;i<pts.length-1;i++){
+        const x1 = pts[i][0], y1 = pts[i][1];
+        const x2 = pts[i+1][0], y2 = pts[i+1][1];
+        const cx = (x1 + x2)/2;
+        d += `Q ${x1},${y1} ${cx},${(y1 + y2)/2} `;
       }
-      this.raf = requestAnimationFrame(this.animate);
+      const last = pts[pts.length-1];
+      d += `T ${w},${last[1]} L ${w},${h} Z`;
+      return d;
     };
 
-    // get wave elements; if any missing, animator will simply skip them
-    const waveBack = $('wave-back');
-    const waveMid = $('wave-mid');
-    const waveFront = $('wave-front');
+    // Setup SmoothWave instances for back/mid/front
+    const elBack = $id('wave-back');
+    const elMid  = $id('wave-mid');
+    const elFront = $id('wave-front');
+    const foamGroup = $id('foam-group');
+    const splashRoot = $id('splash-root');
 
-    const animator = new WaveAnimator([
-      { el: waveBack, speed: 0.28, amplitude: 18, base: 320, phase: 0.2, parallaxX: 6 },
-      { el: waveMid, speed: 0.52, amplitude: 22, base: 330, phase: 1.1, parallaxX: 12 },
-      { el: waveFront, speed: 0.84, amplitude: 30, base: 340, phase: 2.0, parallaxX: 20 }
-    ]);
+    // If waves are missing, bail gracefully
+    if (!elBack && !elMid && !elFront) return;
 
-    // Start when DOM ready and visible; small timeout to allow first paint
-    function safeStart(){
-      if (document.readyState === 'complete' || document.readyState === 'interactive'){
-        setTimeout(()=> { if (!document.hidden) animator.start(); }, 120);
-      } else {
-        window.addEventListener('DOMContentLoaded', ()=> setTimeout(()=> { if (!document.hidden) animator.start(); }, 120));
-      }
-    }
-    safeStart();
+    const nowStart = performance.now() * 0.001;
+    const waves = [];
+    if (elBack) waves.push({ sw: new SmoothWave(elBack, { speed: 0.28, amp: 14, base: 320, phase: 0.4 }), el: elBack, depth: 0.6 });
+    if (elMid)  waves.push({ sw: new SmoothWave(elMid,  { speed: 0.48, amp: 18, base: 330, phase: 1.1 }), el: elMid, depth: 0.8 });
+    if (elFront)waves.push({ sw: new SmoothWave(elFront,{ speed: 0.84, amp: 26, base: 340, phase: 2.0 }), el: elFront, depth: 1.0 });
 
-    // Parallax: subtle tilt based on pointer (defensive)
-    const heroInner = $('hero-inner');
-    if (heroInner && !prefersReduced){
-      let raf = null;
-      function handleMove(clientX, clientY){
-        const rect = heroInner.getBoundingClientRect();
-        const rx = (clientX - (rect.left + rect.width/2)) / rect.width;
-        const ry = (clientY - (rect.top + rect.height/2)) / rect.height;
-        heroInner.style.transform = `perspective(900px) translateZ(0) rotateX(${(-ry*2.2).toFixed(2)}deg) rotateY(${(rx*2.2).toFixed(2)}deg)`;
-        const panel = document.querySelector('.panel');
-        if (panel) panel.style.transform = `translateY(${(-ry*6).toFixed(1)}px) translateX(${(-rx*6).toFixed(1)}px)`;
-      }
-      window.addEventListener('mousemove', (e) => {
-        if (raf) cancelAnimationFrame(raf);
-        raf = requestAnimationFrame(()=> handleMove(e.clientX, e.clientY));
-      });
-      window.addEventListener('touchmove', (e) => {
-        if (e.touches && e.touches[0]) handleMove(e.touches[0].clientX, e.touches[0].clientY);
-      }, { passive:true });
-    }
+    // animator loop — low-cost: computes minimal points and lerps them
+    let rafId = null;
+    let t = 0;
+    function tick(ts){
+      if (prefersReduced) return; // do not animate
+      t = (ts * 0.001) - nowStart;
 
-    // Particles: safe init with devicePixelRatio sizing
-    (function initParticles(){
-      if (prefersReduced) return;
-      const canvas = $('particles');
-      if (!canvas) return;
-      const ctx = canvas.getContext && canvas.getContext('2d');
-      if (!ctx) return;
-
-      let w = 0, h = 0, dpr = Math.max(1, window.devicePixelRatio || 1);
-      function resize(){
-        dpr = Math.max(1, window.devicePixelRatio || 1);
-        w = canvas.clientWidth || window.innerWidth;
-        h = canvas.clientHeight || window.innerHeight;
-        canvas.width = Math.round(w * dpr);
-        canvas.height = Math.round(h * dpr);
-        canvas.style.width = w + 'px';
-        canvas.style.height = h + 'px';
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
-      resize();
-      window.addEventListener('resize', resize, { passive:true });
-
-      const count = Math.max(18, Math.min(80, Math.round((w*h)/40000)));
-      const particles = [];
-      for (let i=0;i<count;i++){
-        particles.push({
-          x: Math.random()*w,
-          y: Math.random()*h,
-          r: Math.random()*1.8 + 0.6,
-          vx: (Math.random()-0.5)*0.2,
-          vy: (Math.random()*0.3)+0.02,
-          alpha: Math.random()*0.6 + 0.08,
-        });
-      }
-
-      let last = performance.now();
-      function loop(now){
-        const dt = Math.min(40, now-last)/1000;
-        last = now;
-        ctx.clearRect(0,0,w,h);
-        for (let p of particles){
-          p.x += p.vx * (40*dt);
-          p.y += p.vy * (40*dt);
-          p.alpha += Math.sin(now*0.0006 + p.r) * 0.002;
-          if (p.x > w+30) p.x = -30;
-          if (p.x < -30) p.x = w+30;
-          if (p.y > h+30) p.y = -30;
-          const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r*7);
-          grad.addColorStop(0, 'rgba(125,211,252,' + (Math.max(0, Math.min(1, p.alpha))*0.95) + ')');
-          grad.addColorStop(1, 'rgba(62,139,255,0)');
-          ctx.fillStyle = grad;
-          ctx.fillRect(p.x - p.r*7, p.y - p.r*7, p.r*14, p.r*14);
+      // For each wave: generate target points and step current towards it
+      const smoothFactor = 0.14; // lower = smoother/slower to catch up
+      for (let i=0;i<waves.length;i++){
+        const item = waves[i];
+        item.sw.generateTarget(t * (0.9 + i*0.06)); // slight time offset per wave layer
+        item.sw.step(smoothFactor);
+        const d = item.sw.pathD();
+        if (d) {
+          try { item.el.setAttribute('d', d); } catch(e){ /* ignore */ }
+          // slight parallax translate for visual richness (no text tilt)
+          const tx = Math.sin(t * item.sw.speed * 0.32 + item.sw.phase) * (8 * (i/waves.length));
+          item.el.style.transform = `translate3d(${tx}px,0,0)`;
         }
-        requestAnimationFrame(loop);
       }
-      requestAnimationFrame(loop);
+
+      // foam subtle breathing — low-cost: gentle opacity oscillation
+      if (foamGroup) {
+        const foamAlpha = 0.035 + (Math.sin(t * 0.6) * 0.02);
+        foamGroup.style.opacity = String(Math.max(0, Math.min(0.08, foamAlpha)));
+      }
+
+      rafId = requestAnimationFrame(tick);
+    }
+
+    // Splash manager: occasional tasteful "pulses" that mimic a little splash/foam.
+    // Lightweight: creates a small SVG circle with radial fill, animates scale+opacity, then removes.
+    function spawnSplash(xPct){
+      if (!splashRoot) return;
+      // clamp xPct 0..1
+      xPct = Math.max(0, Math.min(1, xPct === undefined ? (0.5 + (Math.random()-0.5)*0.16) : xPct));
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const w = 1400, h = 400;
+      const cx = xPct * w;
+      const cy = 320 + (Math.random()*18 - 6); // around the wave crest area
+      const maxR = 90 + Math.random()*60;
+
+      const g = document.createElementNS(svgNS, 'g');
+      const c = document.createElementNS(svgNS, 'circle');
+      c.setAttribute('cx', String(cx));
+      c.setAttribute('cy', String(cy));
+      c.setAttribute('r', String(8 + Math.random()*6));
+      c.setAttribute('fill', 'url(#splashGrad)');
+      c.setAttribute('opacity', '0.95');
+      g.appendChild(c);
+      splashRoot.appendChild(g);
+
+      // animate using requestAnimationFrame (cheap, short-lived)
+      const duration = 720 + Math.round(Math.random()*320);
+      const start = performance.now();
+      function animate(now){
+        const elapsed = now - start;
+        const p = Math.min(1, elapsed / duration);
+        // ease out
+        const ease = 1 - Math.pow(1 - p, 3);
+        const r = lerp(parseFloat(c.getAttribute('r')), maxR, ease);
+        c.setAttribute('r', String(r));
+        g.setAttribute('opacity', String(lerp(0.95, 0, ease)));
+        // subtle upward move
+        const ty = lerp(0, -18, ease);
+        g.setAttribute('transform', `translate(0,${ty}) scale(${lerp(1, 1.06, ease)})`);
+        if (p < 1) requestAnimationFrame(animate);
+        else { try { splashRoot.removeChild(g); } catch(e){} }
+      }
+      requestAnimationFrame(animate);
+    }
+
+    // periodic tasteful splashes — infrequent so they're special
+    let splashTimer = null;
+    function scheduleSplash(){
+      // interval between 3.5s and 7s, randomized
+      const interval = 3500 + Math.random() * 4200;
+      splashTimer = setTimeout(()=>{
+        spawnSplash();
+        scheduleSplash();
+      }, interval);
+    }
+
+    // Start animation safely
+    function startAll(){
+      if (prefersReduced) {
+        // still fallback: set static shapes for waves and a single gentle foam opacity
+        try {
+          if (elBack) elBack.setAttribute('d','M0,320 C450,300 950,320 1400,320 L1400,400 L0,400 Z');
+          if (elMid)  elMid.setAttribute('d','M0,330 C300,310 900,330 1400,330 L1400,400 L0,400 Z');
+          if (elFront)elFront.setAttribute('d','M0,340 C200,320 1000,340 1400,340 L1400,400 L0,400 Z');
+          if (foamGroup) foamGroup.style.opacity = '0.04';
+        } catch(e){}
+        return;
+      }
+      if (!rafId) rafId = requestAnimationFrame(tick);
+      // initial splash to sell the effect
+      setTimeout(()=> spawnSplash(0.32 + Math.random()*0.36), 420);
+      scheduleSplash();
+    }
+
+    // Stop animation (cleanly)
+    function stopAll(){
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+      if (splashTimer) { clearTimeout(splashTimer); splashTimer = null; }
+    }
+
+    // Start when DOM ready
+    if (document.readyState === 'complete' || document.readyState === 'interactive'){
+      startAll();
+    } else {
+      window.addEventListener('DOMContentLoaded', startAll);
+    }
+
+    // Visibility handling
+    document.addEventListener('visibilitychange', function(){
+      if (document.hidden) stopAll();
+      else startAll();
+    });
+
+    // Allow user-triggered splash on click/tap for delight — no tilt or other movement
+    // (keeps everything accessible and low-cost)
+    (function attachClickSplash(){
+      const hero = document.querySelector('.hero-root');
+      if (!hero) return;
+      hero.addEventListener('pointerdown', function(e){
+        if (prefersReduced) return;
+        const rect = hero.getBoundingClientRect();
+        const xPct = (e.clientX - rect.left) / rect.width;
+        spawnSplash(xPct);
+      }, { passive:true });
     })();
 
-    // prefers-reduced-motion fallback: set static wave shapes and stop animator/particles
-    if (prefersReduced){
-      try{
-        if (waveBack) waveBack.setAttribute('d','M0,320 C450,300 950,320 1400,320 L1400,400 L0,400 Z');
-        if (waveMid) waveMid.setAttribute('d','M0,330 C300,310 900,330 1400,330 L1400,400 L0,400 Z');
-        if (waveFront) waveFront.setAttribute('d','M0,340 C200,320 1000,340 1400,340 L1400,400 L0,400 Z');
-      }catch(e){}
-      animator.stop();
-    }
-
-    // pause animator when page hidden (resource friendly)
-    document.addEventListener('visibilitychange', function(){
-      if (document.hidden) animator.stop();
-      else animator.start();
-    });
-
-    // small entrance polish (non-blocking)
-    requestAnimationFrame(()=> {
-      const el = document.querySelector('.hero-inner');
-      if (!el) return;
-      el.style.opacity = 0;
-      el.style.transition = 'opacity 420ms cubic-bezier(.2,.9,.3,1), transform 420ms';
-      requestAnimationFrame(()=> el.style.opacity = 1);
-    });
+    // Clean up on unload
+    window.addEventListener('unload', stopAll);
   })();
   </script>
 </body>
