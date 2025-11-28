@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>BluePeak Local Optimization – Hero</title>
+  <title>Wavefront Local Optimization – Hero</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="BluePeak Local Optimization builds and maintains Google Business Profiles that drive more calls, visits, and leads — without agency bloat." />
+  <meta name="description" content="Wavefront Local Optimization builds and maintains Google Business Profiles that drive more calls, visits, and leads — without agency bloat." />
 
   <!-- Inter font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,15 +13,18 @@
 
   <style>
     :root {
-      --navy: #0A1A2F;
+      --navy: #020617;
+      --navy-soft: #0B1120;
+      --navy-deep: #020314;
       --blue: #006CFF;
       --blue-soft: #3E8BFF;
-      --text-main: #F8FAFF;
+      --aqua: #22C5FF;
+      --text-main: #F9FAFB;
       --text-muted: #D0D4DF;
       --btn-bg: #FFFFFF;
-      --btn-text: #0A1A2F;
+      --btn-text: #020617;
       --muted-border: rgba(148, 163, 184, 0.55);
-      --glass-bg: rgba(15, 23, 42, 0.84);
+      --glass-bg: rgba(15, 23, 42, 0.9);
     }
 
     * {
@@ -33,19 +36,18 @@
     html, body {
       height: 100%;
       width: 100%;
-      /* Allow normal scrolling — avoid hiding the viewport on mobile browsers */
       overflow: auto;
       font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--navy);
+      background: radial-gradient(circle at 0% 0%, var(--navy-soft), var(--navy) 50%, var(--navy-deep) 100%);
       color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     body {
       display: flex;
       align-items: stretch;
       justify-content: center;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
     }
 
     .hero-root {
@@ -53,103 +55,96 @@
       width: 100%;
       min-height: 72vh;
       max-height: 680px;
-      color: var(--text-main);
       overflow: hidden;
+      color: var(--text-main);
     }
 
-    /* Animated background */
+    /* Matte background – flatter, less shiny */
     .hero-bg {
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(circle at 15% 20%, rgba(0, 108, 255, 0.35), transparent 55%),
-        radial-gradient(circle at 80% 80%, rgba(0, 170, 255, 0.32), transparent 55%),
-        radial-gradient(circle at 70% 10%, rgba(62, 139, 255, 0.4), transparent 60%),
-        linear-gradient(135deg, #020616, #0A1A2F 40%, #111827 80%);
-      background-size: 160% 160%;
-      animation: gradientShift 22s ease-in-out infinite alternate;
-      filter: saturate(1.05);
+        radial-gradient(circle at 20% 0%, rgba(37, 99, 235, 0.18), transparent 55%),
+        linear-gradient(135deg, var(--navy) 0%, var(--navy-deep) 70%);
       pointer-events: none;
+      z-index: 0;
     }
 
-    @keyframes gradientShift {
-      0% { background-position: 0% 0%; }
-      50% { background-position: 50% 100%; }
-      100% { background-position: 100% 40%; }
-    }
-
-    /* Floating orbs (decorative) */
-    .orb {
+    /* Wave layers at the bottom */
+    .wave-wrap {
       position: absolute;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.55), transparent 70%);
-      mix-blend-mode: screen;
-      opacity: 0.24;
-      filter: blur(2px);
+      inset: auto 0 0 0;
+      height: 52%;
       pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
     }
 
-    .orb.orb-1 {
-      width: 260px;
-      height: 260px;
-      top: 40%;
-      left: -6%;
-      animation: floatOrb1 30s ease-in-out infinite alternate;
+    .wave-layer {
+      position: absolute;
+      left: -25%;
+      width: 150%;
+      height: 75%;
+      border-radius: 45% 55% 0 0 / 70% 70% 0 0;
+      filter: blur(0.3px);
     }
 
-    .orb.orb-2 {
-      width: 220px;
-      height: 220px;
-      top: -8%;
-      right: 10%;
-      animation: floatOrb2 28s ease-in-out infinite alternate;
-    }
-
-    .orb.orb-3 {
-      width: 300px;
-      height: 300px;
+    .wave-back {
       bottom: -12%;
-      right: -8%;
-      animation: floatOrb3 32s ease-in-out infinite alternate;
+      background: linear-gradient(120deg, rgba(15, 23, 42, 0.4), rgba(15, 23, 42, 0.9));
+      box-shadow: 0 -35px 80px rgba(15, 23, 42, 0.9);
+      animation: waveDriftBack 34s ease-in-out infinite alternate;
     }
 
-    @keyframes floatOrb1 {
-      0% { transform: translate3d(0, 0, 0); }
-      50% { transform: translate3d(18px, -22px, 0); }
-      100% { transform: translate3d(40px, 10px, 0); }
+    .wave-mid {
+      bottom: -18%;
+      background: linear-gradient(120deg, rgba(0, 108, 255, 0.14), rgba(22, 163, 255, 0.35));
+      box-shadow: 0 -26px 60px rgba(15, 23, 42, 0.75);
+      animation: waveDriftMid 26s ease-in-out infinite alternate;
     }
 
-    @keyframes floatOrb2 {
-      0% { transform: translate3d(0, 0, 0); }
-      50% { transform: translate3d(-24px, 14px, 0); }
-      100% { transform: translate3d(-40px, -12px, 0); }
+    .wave-front {
+      bottom: -24%;
+      background: linear-gradient(120deg, rgba(34, 197, 255, 0.94), rgba(37, 99, 235, 0.96));
+      box-shadow: 0 -20px 50px rgba(15, 23, 42, 0.9);
+      opacity: 0.98;
+      animation: waveDriftFront 18s ease-in-out infinite alternate;
     }
 
-    @keyframes floatOrb3 {
-      0% { transform: translate3d(0, 0, 0); }
-      50% { transform: translate3d(-18px, -18px, 0); }
-      100% { transform: translate3d(-36px, 6px, 0); }
+    @keyframes waveDriftBack {
+      0%   { transform: translateX(0) translateY(0); }
+      50%  { transform: translateX(18px) translateY(6px); }
+      100% { transform: translateX(-24px) translateY(4px); }
     }
 
-    /* Grid lines (decorative) */
-    .grid-overlay {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(to right, rgba(148, 163, 184, 0.10) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(148, 163, 184, 0.10) 1px, transparent 1px);
-      background-size: 80px 80px;
-      opacity: 0.12;
-      mix-blend-mode: soft-light;
-      pointer-events: none;
+    @keyframes waveDriftMid {
+      0%   { transform: translateX(0) translateY(0); }
+      50%  { transform: translateX(-20px) translateY(-5px); }
+      100% { transform: translateX(26px) translateY(2px); }
+    }
+
+    @keyframes waveDriftFront {
+      0%   { transform: translateX(0) translateY(0); }
+      50%  { transform: translateX(26px) translateY(-4px); }
+      100% { transform: translateX(-22px) translateY(2px); }
     }
 
     .hero-inner {
       position: relative;
-      z-index: 10;
+      z-index: 5;
       width: 100%;
       height: 100%;
       padding: 40px 6vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Centered content container so it’s not “far away” on big screens */
+    .hero-container {
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -164,17 +159,17 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 999px;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      margin-bottom: 16px;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      margin-bottom: 18px;
       backdrop-filter: blur(8px);
     }
 
     .badge-dot {
-      width: 7px;
-      height: 7px;
+      width: 8px;
+      height: 8px;
       border-radius: 999px;
       background: #22C55E;
       box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.22);
@@ -183,32 +178,32 @@
     .badge-text {
       font-size: 12px;
       font-weight: 500;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--text-muted);
     }
 
     .hero-title {
-      font-size: clamp(32px, 4vw, 40px);
+      font-size: clamp(34px, 4.6vw, 48px);
       font-weight: 600;
-      line-height: 1.12;
+      line-height: 1.1;
       letter-spacing: -0.02em;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .hero-highlight {
-      background: linear-gradient(120deg, #E5F0FF, #64A5FF);
+      background: linear-gradient(120deg, #E5F0FF, #7DD3FC);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
     }
 
     .hero-subtitle {
-      font-size: 15px;
-      max-width: 420px;
+      font-size: 16px;
+      max-width: 460px;
       color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 22px;
+      line-height: 1.65;
+      margin-bottom: 24px;
     }
 
     .hero-actions {
@@ -223,7 +218,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 10px 20px;
+      padding: 11px 22px;
       border-radius: 999px;
       background: var(--btn-bg);
       color: var(--btn-text);
@@ -231,7 +226,7 @@
       font-weight: 600;
       letter-spacing: 0.02em;
       cursor: pointer;
-      box-shadow: 0 14px 35px rgba(15, 23, 42, 0.42);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.6);
       transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
       text-decoration: none;
       white-space: nowrap;
@@ -242,7 +237,7 @@
       width: 18px;
       height: 18px;
       border-radius: 999px;
-      background: radial-gradient(circle at 30% 30%, var(--blue), var(--blue-soft));
+      background: radial-gradient(circle at 30% 30%, var(--blue), var(--aqua));
       align-items: center;
       justify-content: center;
       color: white;
@@ -252,32 +247,36 @@
 
     .btn-primary:hover {
       transform: translateY(-1px);
-      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.7);
+      box-shadow: 0 22px 60px rgba(15, 23, 42, 0.85);
       background: #F3F4F6;
     }
 
     .btn-ghost {
-      padding: 9px 16px;
+      padding: 10px 18px;
       border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.65);
+      background: rgba(15, 23, 42, 0.85);
       color: var(--text-muted);
       font-size: 13px;
       text-decoration: none;
-      transition: background 160ms ease, color 160ms ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+      white-space: nowrap;
     }
 
     .btn-ghost:hover {
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(15, 23, 42, 0.98);
       color: #E5E7EB;
+      border-color: rgba(148, 163, 184, 0.95);
     }
 
-    /* visible focus for keyboard users */
     .btn-primary:focus-visible,
     .btn-ghost:focus-visible {
-      outline: 3px solid rgba(99, 102, 241, 0.18);
+      outline: 3px solid rgba(56, 189, 248, 0.5);
       outline-offset: 3px;
-      box-shadow: 0 8px 20px rgba(2,6,23,0.35);
+      box-shadow: 0 8px 20px rgba(2, 6, 23, 0.55);
     }
 
     .hero-meta {
@@ -295,7 +294,7 @@
       border-radius: 999px;
     }
 
-    /* Right panel */
+    /* Right side card */
     .hero-right {
       flex: 1;
       display: flex;
@@ -309,13 +308,14 @@
       padding: 16px 18px;
       background: var(--glass-bg);
       border: 1px solid var(--muted-border);
-      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(14px);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(16px);
     }
 
     .panel-header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 12px;
     }
 
@@ -328,9 +328,9 @@
       font-size: 11px;
       padding: 2px 8px;
       border-radius: 999px;
-      background: rgba(22, 163, 74, 0.16);
+      background: rgba(34, 197, 94, 0.18);
       color: #BBF7D0;
-      border: 1px solid rgba(22, 163, 74, 0.5);
+      border: 1px solid rgba(22, 163, 74, 0.55);
     }
 
     .metric-row {
@@ -351,152 +351,5 @@
       margin-top: 10px;
       height: 58px;
       border-radius: 12px;
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.14), rgba(6, 182, 212, 0.08));
+      background: linear-gradient(135deg, #020617, #111827);
       overflow: hidden;
-      position: relative; /* CONTAIN the absolute sparkline line */
-    }
-
-    /* Simpler cross-browser sparkline decoration (no clip-path:path) */
-    .sparkline-line {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background-image: linear-gradient(90deg, rgba(219,234,254,0.9) 0%, rgba(219,234,254,0.0) 50%, rgba(219,234,254,0.9) 100%);
-      opacity: 0.95;
-      transform: translateX(0);
-      animation: wobble 10s ease-in-out infinite alternate;
-    }
-
-    @keyframes wobble {
-      0% { transform: translateX(0); }
-      50% { transform: translateX(-6px); }
-      100% { transform: translateX(6px); }
-    }
-
-    .panel-footer {
-      margin-top: 12px;
-      font-size: 11px;
-      color: #9CA3AF;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 900px) {
-      .hero-inner {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 28px 5vw;
-        gap: 18px;
-      }
-
-      .hero-right {
-        width: 100%;
-        display: flex;
-        justify-content: flex-start;
-        margin-top: 6px;
-      }
-
-      .panel {
-        width: 100%;
-        max-width: 100%;
-      }
-
-      /* Reduce heavy decoration on small screens for performance and clarity */
-      .orb { display: none; }
-      .grid-overlay { opacity: 0.06; background-size: 64px 64px; }
-    }
-
-    /* Respect users' reduced motion preference */
-    @media (prefers-reduced-motion: reduce) {
-      .hero-bg,
-      .orb,
-      .sparkline-line {
-        animation: none !important;
-        transition: none !important;
-      }
-    }
-
-  </style>
-</head>
-
-<body>
-  <div class="hero-root" role="region" aria-label="Top of page — BluePeak Local Optimization">
-    <div class="hero-bg" aria-hidden="true"></div>
-    <div class="grid-overlay" aria-hidden="true"></div>
-
-    <div class="orb orb-1" aria-hidden="true"></div>
-    <div class="orb orb-2" aria-hidden="true"></div>
-    <div class="orb orb-3" aria-hidden="true"></div>
-
-    <div class="hero-inner">
-
-      <div class="hero-left">
-        <div class="badge" aria-hidden="false">
-          <div class="badge-dot" aria-hidden="true"></div>
-          <div class="badge-text">Google Business Profile Specialists</div>
-        </div>
-
-        <h1 class="hero-title">
-          Be the business that <span class="hero-highlight">shows up first.</span>
-        </h1>
-
-        <p class="hero-subtitle">
-          BluePeak Local Optimization builds and maintains Google Business Profiles that look enterprise-grade and quietly drive more calls, visits, and leads — without agency bloat.
-        </p>
-
-        <div class="hero-actions">
-          <a href="#" class="btn-primary" role="button">
-            <span class="icon" aria-hidden="true">↗</span>
-            <span>Run a Free Google Audit</span>
-          </a>
-          <a href="#" class="btn-ghost" role="button">
-            <span>See the $99 setup</span>
-          </a>
-        </div>
-
-        <div class="hero-meta">
-          <span><span class="hero-meta-dot" aria-hidden="true"></span> No contracts</span>
-          <span><span class="hero-meta-dot" aria-hidden="true"></span> $99 setup</span>
-          <span><span class="hero-meta-dot" aria-hidden="true"></span> $49/mo management</span>
-        </div>
-      </div>
-
-      <div class="hero-right">
-        <div class="panel" role="region" aria-label="Local visibility overview">
-          <div class="panel-header">
-            <div class="panel-title">Local Visibility Overview</div>
-            <div class="status-pill" aria-hidden="false">Optimized</div>
-          </div>
-
-          <div class="metric-row">
-            <div class="metric-label">Profile searches</div>
-            <div class="metric-value">+138% last 30 days</div>
-          </div>
-
-          <div class="metric-row">
-            <div class="metric-label">Calls from listing</div>
-            <div class="metric-value">+64 calls</div>
-          </div>
-
-          <div class="metric-row">
-            <div class="metric-label">Direction requests</div>
-            <div class="metric-value">+41 visits</div>
-          </div>
-
-          <div class="sparkline" aria-hidden="true">
-            <div class="sparkline-line"></div>
-          </div>
-
-          <div class="panel-footer">
-            <div>Sample metrics</div>
-            <div>BluePeak Audit</div>
-          </div>
-
-        </div>
-      </div>
-
-    </div>
-  </div>
-</body>
-</html>
