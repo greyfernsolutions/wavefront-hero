@@ -5,461 +5,407 @@
   <title>Wavefront Local Optimization – Hero</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="Wavefront Local Optimization builds and maintains Google Business Profiles that drive more calls, visits, and leads — without agency bloat." />
+
+  <!-- Inter font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
-    :root{
-      --navy: #020617;
-      --navy-soft: #0B1120;
-      --navy-deep: #020314;
-      --blue: #006CFF;
-      --blue-soft: #3E8BFF;
-      --aqua: #22C5FF;
-      --text-main: #F9FAFB;
-      --text-muted: #D0D4DF;
-      --glass-bg: rgba(12,16,24,0.58);
-      --glass-border: rgba(148,163,184,0.18);
+    :root {
+      --bg-top: #e5f0ff;
+      --bg-bottom: #f9fafb;
+      --primary: #2563eb;
+      --primary-soft: #3b82f6;
+      --accent: #0ea5e9;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.12);
     }
 
-    /* Base reset */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html,body { height:100%; width:100%; }
-    body{
-      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: radial-gradient(1200px 600px at 8% 8%, rgba(6,22,54,0.56), transparent 15%),
-                  radial-gradient(800px 400px at 92% 80%, rgba(20,32,64,0.25), transparent 12%),
-                  linear-gradient(180deg,var(--navy-soft), var(--navy) 40%, var(--navy-deep) 100%);
-      color:var(--text-main);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      overflow-x:hidden;
-      display:flex;
-      align-items:stretch;
-      justify-content:center;
-      padding:48px 20px;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    /* Hero root */
-    .hero-root{
-      position:relative;
-      width:100%;
-      max-width:1280px;
-      min-height:72vh;
-      border-radius:20px;
-      overflow:visible;
+    html, body {
+      height: 100%;
+      width: 100%;
     }
 
-    /* Particles canvas sits behind content */
-    #particles {
-      position:absolute;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      mix-blend-mode:screen;
-      opacity:0.18;
-      filter: blur(10px) saturate(120%);
+    body {
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg-top), var(--bg-bottom));
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 40px 16px;
     }
 
-    .hero-inner{
-      position:relative;
-      z-index:6;
-      display:flex;
-      gap:36px;
-      align-items:center;
-      justify-content:space-between;
-      padding:44px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:20px;
-      backdrop-filter: blur(8px) saturate(120%);
-      border: 1px solid rgba(255,255,255,0.03);
-      box-shadow: 0 24px 80px rgba(2,6,23,0.7), inset 0 1px 0 rgba(255,255,255,0.02);
+    .hero-root {
+      position: relative;
+      width: 100%;
+      max-width: 1180px;
+      min-height: 70vh;
+      background: transparent;
     }
 
-    /* Left content */
-    .hero-left { flex: 0 1 56%; max-width:720px; z-index:7; }
-    .badge{ display:inline-flex; align-items:center; gap:10px; padding:6px 14px; border-radius:999px;
-      background: rgba(12,16,24,0.48); border:1px solid rgba(255,255,255,0.03); color:var(--text-muted); font-weight:600; font-size:12px; backdrop-filter: blur(6px);
-    }
-    .badge-dot{ width:8px; height:8px; border-radius:999px; background: linear-gradient(90deg,#34D399,#10B981); box-shadow:0 0 0 6px rgba(34,211,153,0.12); }
-
-    .hero-title{
-      margin-top:18px;
-      font-size: clamp(34px, 4.6vw, 52px);
-      line-height:1.02;
-      font-weight:700;
-      letter-spacing:-0.02em;
-      color:linear-gradient;
-      -webkit-background-clip:text; background-clip:text;
-    }
-    .hero-highlight{
-      background: linear-gradient(90deg, #BEE7FF, #7DD3FC 45%, #3E8BFF);
-      -webkit-background-clip:text;
-      color:transparent;
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      background: linear-gradient(145deg, rgba(255,255,255,0.96), rgba(255,255,255,0.94));
+      border-radius: 20px;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-shadow: var(--shadow-soft);
+      padding: 32px 32px 36px;
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    .hero-subtitle{
-      margin-top:16px;
-      color:var(--text-muted);
-      font-size:16px;
-      line-height:1.6;
-      max-width:56ch;
+    .hero-left {
+      flex: 0 1 58%;
+      max-width: 640px;
     }
 
-    .hero-actions{ margin-top:20px; display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
-    .btn{
-      display:inline-flex; align-items:center; gap:10px; padding:12px 20px; border-radius:999px; font-weight:700; letter-spacing:0.01em;
-      text-decoration:none; cursor:pointer;
-    }
-    .btn-primary{
-      background: linear-gradient(90deg, #EAF6FF, #FFFFFF 35%); color: #061026; box-shadow: 0 18px 50px rgba(2,8,23,0.65);
-      transition: transform .22s cubic-bezier(.2,.9,.3,1), box-shadow .22s;
-    }
-    .btn-primary:hover{ transform: translateY(-4px); box-shadow: 0 26px 80px rgba(2,8,23,0.8); }
-    .btn-ghost{ border:1px solid rgba(255,255,255,0.06); background: rgba(12,16,24,0.45); color:var(--text-muted); }
-
-    .hero-meta{ margin-top:18px; display:flex; gap:12px; color:rgba(210,215,225,0.85); font-size:13px; align-items:center; flex-wrap:wrap;}
-    .hero-meta-dot{ width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.08); box-shadow:0 0 0 6px rgba(255,255,255,0.02) inset; }
-
-    /* Right side card */
-    .hero-right{ flex: 0 1 36%; display:flex; justify-content:flex-end; z-index:7; }
-    .panel{
-      width:320px; border-radius:16px; padding:18px; background: var(--glass-bg); border:1px solid var(--glass-border);
-      box-shadow: 0 36px 84px rgba(2,6,23,0.72);
-      backdrop-filter: blur(14px) saturate(120%);
-      transform: translateY(0);
-      transition: transform .22s cubic-bezier(.2,.9,.3,1);
-    }
-    .panel:hover{ transform: translateY(-6px); }
-    .panel-title{ font-weight:700; color:#E6F0FF; font-size:13px; }
-    .status-pill{ background: linear-gradient(90deg, rgba(34,197,94,0.12), rgba(34,197,94,0.06)); color:#BBF7D0; font-weight:700; padding:4px 8px; border-radius:999px; font-size:12px; border:1px solid rgba(22,163,74,0.12); }
-
-    .metric-row{ margin-top:12px; display:flex; justify-content:space-between; gap:12px; align-items:center; color:#BFD6FF; }
-    .metric-label{ color:#9CA3AF; font-size:12px; }
-
-    .sparkline{ margin-top:12px; height:70px; border-radius:12px; overflow:hidden; background:linear-gradient(180deg, rgba(1,6,20,0.5), rgba(3,9,25,0.5)); display:flex; align-items:center; padding:8px; }
-
-    /* Wave container (SVG) */
-    .wave-container{
-      position:absolute;
-      left:0; right:0; bottom:-2px; height:48%;
-      z-index:2; pointer-events:none; transform:translateZ(0);
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(239, 246, 255, 0.95);
+      border: 1px solid #dbeafe;
+      color: #1d4ed8;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
     }
 
-    svg.wave-svg{ width:100%; height:100%; display:block; }
-
-    /* Subtle overlay "gloss" */
-    .gloss{
-      position:absolute;
-      left:6%; top:6%; width:88%; height:88%; pointer-events:none; border-radius:20px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.0));
-      z-index:5;
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #22c55e;
     }
 
-    /* Prefers reduced motion */
-    @media (prefers-reduced-motion: reduce){
-      .btn-primary, .panel, .hero-inner { transition: none !important; animation: none !important; }
+    .hero-title {
+      margin-top: 18px;
+      font-size: clamp(32px, 4.8vw, 46px);
+      line-height: 1.08;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: var(--text-main);
     }
 
-    /* Responsive */
-    @media (max-width:900px){
-      .hero-inner{ flex-direction:column; padding:28px; gap:22px; text-align:center; }
-      .hero-right{ justify-content:center; }
-      .hero-left{ order:1; }
-      .hero-right{ order:2; }
-      .hero-left, .hero-right{ width:100%; max-width:720px; }
-      .wave-container{ height:44%; bottom:-4px; }
+    .hero-highlight {
+      color: var(--primary);
+    }
+
+    .hero-subtitle {
+      margin-top: 14px;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      max-width: 52ch;
+    }
+
+    .hero-actions {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 20px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(120deg, #2563eb, #3b82f6);
+      color: #ffffff;
+      box-shadow: 0 14px 32px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 42px rgba(37, 99, 235, 0.45);
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: var(--text-main);
+      border-color: #e2e8f0;
+    }
+
+    .btn-secondary:hover {
+      background: #f9fafb;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+    }
+
+    .hero-meta {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .hero-meta span::before {
+      content: "•";
+      margin-right: 6px;
+      color: #9ca3af;
+    }
+
+    .hero-meta span:first-child::before {
+      content: "";
+      margin-right: 0;
+    }
+
+    .hero-right {
+      flex: 0 1 36%;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .panel {
+      width: 280px;
+      max-width: 100%;
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.14);
+      padding: 16px 18px 18px;
+      color: var(--text-main);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .status-pill {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #dcfce7;
+      color: #166534;
+      font-weight: 600;
+    }
+
+    .metric-row {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #4b5563;
+    }
+
+    .metric-main {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    .chart {
+      margin-top: 12px;
+      width: 100%;
+      height: 64px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, #eff6ff, #dbeafe);
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+    }
+
+    .chart svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .panel-footer {
+      margin-top: 10px;
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    /* Animated wave strip at bottom */
+    .wave-strip-wrap {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 80px;
+      overflow: hidden;
+      z-index: 1;
+      border-radius: 0 0 20px 20px;
+    }
+
+    .wave-strip {
+      position: absolute;
+      left: -50%;
+      width: 200%;
+      height: 120px;
+      background: linear-gradient(90deg, #7dd3fc, #3b82f6, #0ea5e9, #3b82f6, #7dd3fc);
+      opacity: 0.85;
+      animation: waveMove 18s linear infinite;
+      transform: translateY(20px);
+    }
+
+    @keyframes waveMove {
+      0% { transform: translateX(0) translateY(20px); }
+      100% { transform: translateX(-25%) translateY(20px); }
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 900px) {
+      body {
+        padding: 24px 12px;
+      }
+
+      .hero-inner {
+        flex-direction: column;
+        padding: 24px 20px 30px;
+      }
+
+      .hero-left,
+      .hero-right {
+        flex: 1 1 auto;
+        max-width: 100%;
+      }
+
+      .hero-left {
+        text-align: left;
+      }
+
+      .panel {
+        margin-top: 4px;
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn,
+      .wave-strip {
+        animation: none !important;
+        transition: none !important;
+      }
     }
   </style>
 </head>
 
 <body>
   <div class="hero-root" role="main" aria-labelledby="hero-title">
-    <!-- lightweight particles for atmosphere -->
-    <canvas id="particles" aria-hidden="true"></canvas>
-
-    <div class="hero-inner" id="hero-inner">
-      <div class="hero-left">
+    <div class="hero-inner">
+      <section class="hero-left">
         <div class="badge" aria-hidden="true">
-          <span class="badge-dot" aria-hidden="true"></span>
-          <span>New · Wavefront</span>
+          <span class="badge-dot"></span>
+          <span>Wavefront · Google Business Profiles</span>
         </div>
 
         <h1 id="hero-title" class="hero-title">
-          Local visibility that converts — <span class="hero-highlight">without agency bloat</span>
+          Local visibility that <span class="hero-highlight">actually pays off.</span>
         </h1>
 
         <p class="hero-subtitle">
-          Wavefront Local Optimization builds and maintains Google Business Profiles that drive more calls, visits, and leads — simple pricing, clear outcomes, and fast setups.
+          Wavefront Local Optimization sets up and maintains your Google Business Profile so the right customers find you first — with a simple $99 setup and $49/month management.
         </p>
 
         <div class="hero-actions" role="group" aria-label="Primary actions">
-          <a href="#get-started" class="btn btn-primary" id="primary-cta">
-            Get started
-          </a>
-          <a href="#learn-more" class="btn btn-ghost">See demo</a>
+          <!-- Later: link this to your audit / intake -->
+          <a href="#" class="btn btn-primary">Get my free Google audit</a>
+          <a href="#" class="btn btn-secondary">See exactly what you do</a>
         </div>
 
         <div class="hero-meta" aria-hidden="true">
-          <span class="hero-meta-dot"></span>
-          <span>Trusted by local teams</span>
-          <span class="hero-meta-dot"></span>
-          <span>Free onboarding</span>
-          <span class="hero-meta-dot"></span>
-          <span>No long contracts</span>
+          <span>Fixed $99 setup</span>
+          <span>$49/month management</span>
+          <span>No long-term contracts</span>
         </div>
-      </div>
+      </section>
 
-      <aside class="hero-right" aria-label="Example dashboard panel">
-        <div class="panel" role="region" aria-label="Local dashboard example">
-          <div style="display:flex;justify-content:space-between;align-items:center;">
-            <div class="panel-title">Local Dashboard</div>
-            <div class="status-pill" role="status">Active</div>
+      <aside class="hero-right" aria-label="Example results panel">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Example results</div>
+            <div class="status-pill">Increased</div>
           </div>
 
           <div class="metric-row">
             <div>
-              <div class="metric-label">Calls</div>
-              <div style="font-weight:800; font-size:16px; color:#E6F6FF;">+28% <span style="font-weight:500;color:var(--text-muted); font-size:12px;">MoM</span></div>
+              <div class="metric-label">Profile searches</div>
+              <div class="metric-main">+138%</div>
             </div>
             <div style="text-align:right;">
-              <div class="metric-label">Bookings</div>
-              <div style="font-weight:800; font-size:16px; color:#E6F6FF;">+12%</div>
+              <div class="metric-label">Calls from listing</div>
+              <div class="metric-main">+64</div>
             </div>
           </div>
 
-          <div class="metric-row" style="margin-top:10px;">
-            <div class="metric-label">Listings optimized</div>
-            <div style="font-weight:800;">21</div>
+          <div class="metric-row">
+            <div class="metric-label">Direction requests</div>
+            <div class="metric-main">+41</div>
           </div>
 
-          <div class="sparkline" aria-hidden="true">
-            <svg viewBox="0 0 200 70" preserveAspectRatio="none" role="img" aria-hidden="true" style="width:100%;height:100%;">
+          <div class="chart" aria-hidden="true">
+            <svg viewBox="0 0 200 64" preserveAspectRatio="none">
               <defs>
-                <linearGradient id="sg" x1="0" x2="1">
-                  <stop offset="0" stop-color="#7DD3FC" stop-opacity="0.95" />
-                  <stop offset="1" stop-color="#3E8BFF" stop-opacity="0.95" />
+                <linearGradient id="chartLine" x1="0" x2="1">
+                  <stop offset="0" stop-color="#2563eb" />
+                  <stop offset="1" stop-color="#0ea5e9" />
                 </linearGradient>
               </defs>
-              <path id="spark" d="M0,60 L20,50 L40,46 L60,36 L80,30 L100,28 L120,22 L140,18 L160,20 L180,12 L200,10"
-                    stroke="url(#sg)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M5 54 L30 50 L55 46 L80 40 L105 34 L130 30 L155 26 L180 20 L195 18"
+                    fill="none" stroke="url(#chartLine)" stroke-width="3"
+                    stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </div>
 
-          <div style="margin-top:12px; font-size:12px; color:var(--text-muted);">
-            Recent: New photos added · Google Q&A answered
+          <div class="panel-footer">
+            Sample data from a local service business after a full Wavefront setup and 60 days of management.
           </div>
         </div>
       </aside>
     </div>
 
-    <div class="wave-container" aria-hidden="true">
-      <!-- Layered SVG waves: back, mid, front + foam overlay -->
-      <svg class="wave-svg" viewBox="0 0 1400 400" preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="wback" x1="0" x2="1">
-            <stop offset="0" stop-color="#061026" stop-opacity="1"/>
-            <stop offset="1" stop-color="#071125" stop-opacity="1"/>
-          </linearGradient>
-          <linearGradient id="wmid" x1="0" x2="1">
-            <stop offset="0" stop-color="#05203d" stop-opacity="0.85"/>
-            <stop offset="1" stop-color="#013a6a" stop-opacity="0.85"/>
-          </linearGradient>
-          <linearGradient id="wfront" x1="0" x2="1">
-            <stop offset="0" stop-color="#7DD3FC" stop-opacity="1"/>
-            <stop offset="1" stop-color="#3E8BFF" stop-opacity="1"/>
-          </linearGradient>
-
-          <filter id="waveBlur" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="10" result="b"></feGaussianBlur>
-            <feBlend in="SourceGraphic" in2="b" mode="screen"/>
-          </filter>
-
-          <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="18" result="g"/>
-            <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-
-        <!-- Back wave -->
-        <path id="wave-back" fill="url(#wback)" opacity="0.95" d="M0,320 C200,300 400,330 700,320 C1000,310 1200,330 1400,320 L1400,400 L0,400 Z" style="filter:url(#waveBlur); transform-origin:center bottom;"></path>
-
-        <!-- Mid wave -->
-        <path id="wave-mid" fill="url(#wmid)" opacity="0.92" d="M0,330 C180,310 420,350 700,330 C980,310 1180,340 1400,330 L1400,400 L0,400 Z" style="mix-blend-mode:screen; transform-origin:center bottom;"></path>
-
-        <!-- Front (colored) wave -->
-        <path id="wave-front" fill="url(#wfront)" opacity="0.98" d="M0,340 C150,300 420,360 700,340 C980,320 1250,360 1400,340 L1400,400 L0,400 Z" style="filter:url(#softGlow); transform-origin:center bottom;"></path>
-
-        <!-- Foam / white crest highlight -->
-        <path id="wave-foam" fill="rgba(255,255,255,0.06)" d="M0,360 C120,340 360,380 700,360 C1040,340 1260,380 1400,360 L1400,400 L0,400 Z"></path>
-      </svg>
+    <div class="wave-strip-wrap" aria-hidden="true">
+      <div class="wave-strip"></div>
     </div>
-
-    <div class="gloss" aria-hidden="true"></div>
   </div>
-
-  <script>
-  // Ultra-smooth waves + parallax + particles.
-  // Lightweight — no external libs. Uses requestAnimationFrame.
-  (function(){
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // Procedural wave animator — modifies SVG path control points with sine offsets
-    function WaveAnimator(paths, opts = {}) {
-      this.paths = paths; // array of {el, speed, amplitude, baseline}
-      this.t = 0;
-      this.running = false;
-      this.opts = opts;
-      this.animate = this.animate.bind(this);
-    }
-    WaveAnimator.prototype.start = function(){
-      if (prefersReduced) return;
-      if (!this.running){ this.running = true; requestAnimationFrame(this.animate); }
-    };
-    WaveAnimator.prototype.stop = function(){ this.running = false; };
-    WaveAnimator.prototype.animate = function(ts){
-      if (!this.running) return;
-      this.t += 0.016; // approx seconds per frame at 60fps
-      for (let p of this.paths){
-        // Create a smooth path: divide into points and offset the y by sine waves with different frequencies
-        const w = 1400, h = 400;
-        const segments = 8;
-        const points = [];
-        for (let i=0;i<=segments;i++){
-          const x = (i/segments)*w;
-          const baseY = p.base + (p.amplitude * Math.sin((this.t * p.speed) + (i * 0.9) + p.phase));
-          // add second harmonic for more organic look
-          const extra = (p.amplitude*0.22) * Math.sin((this.t * p.speed * 1.7) + (i * 1.6) + p.phase);
-          points.push([x, baseY + extra]);
-        }
-        // Build smooth cubic-spline-like path using quadratic curves
-        let d = `M0,${h} L0,${points[0][1]} `;
-        for (let i=0;i<points.length-1;i++){
-          const [x1,y1] = points[i];
-          const [x2,y2] = points[i+1];
-          const cx = (x1 + x2)/2;
-          d += `Q ${x1},${y1} ${cx},${(y1+y2)/2} `;
-        }
-        const last = points[points.length-1];
-        d += `T ${w},${last[1]} L ${w},${h} Z`;
-        p.el.setAttribute('d', d);
-        // subtle transform for parallax (hardware accelerated)
-        const tx = Math.sin(this.t * p.speed * 0.4 + p.phase) * p.parallaxX;
-        p.el.style.transform = \`translate3d(\${tx}px, 0, 0) scale(1)\`;
-      }
-      requestAnimationFrame(this.animate);
-    };
-
-    // Grab elements
-    const waveBack = document.getElementById('wave-back');
-    const waveMid = document.getElementById('wave-mid');
-    const waveFront = document.getElementById('wave-front');
-    // Create animator with tuned parameters for premium motion
-    const animator = new WaveAnimator([
-      { el: waveBack, speed: 0.28, amplitude: 18, base: 320, phase: 0.2, parallaxX: 6 },
-      { el: waveMid, speed: 0.52, amplitude: 22, base: 330, phase: 1.1, parallaxX: 12 },
-      { el: waveFront, speed: 0.84, amplitude: 30, base: 340, phase: 2.0, parallaxX: 20 }
-    ]);
-    // Start animation after a short delay so page paints first
-    setTimeout(()=>animator.start(), 120);
-
-    // Parallax: subtle tilt on mousemove / touch
-    const heroInner = document.getElementById('hero-inner');
-    let px = 0, py = 0;
-    function handleMove(clientX, clientY){
-      const rect = heroInner.getBoundingClientRect();
-      const rx = (clientX - (rect.left + rect.width/2)) / rect.width;
-      const ry = (clientY - (rect.top + rect.height/2)) / rect.height;
-      px = rx; py = ry;
-      // transform hero inner slightly for depth
-      heroInner.style.transform = \`perspective(900px) translateZ(0) rotateX(\${-ry*2.2}deg) rotateY(\${rx*2.2}deg)\`;
-      // move panel slightly opposite for parallax
-      const panel = document.querySelector('.panel');
-      if (panel) panel.style.transform = \`translateY(\${-ry*6}px) translateX(\${-rx*6}px)\`;
-    }
-    let moveRaf = null;
-    window.addEventListener('mousemove', (e)=>{
-      if (prefersReduced) return;
-      if (moveRaf) cancelAnimationFrame(moveRaf);
-      moveRaf = requestAnimationFrame(()=> handleMove(e.clientX, e.clientY));
-    });
-    window.addEventListener('touchmove', (e)=>{
-      if (prefersReduced) return;
-      if (e.touches && e.touches[0]) handleMove(e.touches[0].clientX, e.touches[0].clientY);
-    }, {passive:true});
-
-    // Particles: lightweight floating dots for atmosphere
-    (function initParticles(){
-      if (prefersReduced) return;
-      const canvas = document.getElementById('particles');
-      const ctx = canvas.getContext('2d');
-      let w = canvas.width = canvas.clientWidth = document.body.clientWidth;
-      let h = canvas.height = canvas.clientHeight = document.body.clientHeight;
-      const count = Math.max(24, Math.min(80, Math.floor(w*h/30000)));
-      const particles = [];
-      for (let i=0;i<count;i++){
-        particles.push({
-          x: Math.random()*w,
-          y: Math.random()*h,
-          r: Math.random()*1.6 + 0.6,
-          vx: (Math.random()-0.5)*0.2,
-          vy: (Math.random()*0.2)+0.02,
-          alpha: Math.random()*0.6 + 0.12,
-        });
-      }
-      let last = performance.now();
-      function resize(){
-        w = canvas.width = canvas.clientWidth = document.body.clientWidth;
-        h = canvas.height = canvas.clientHeight = document.body.clientHeight;
-      }
-      window.addEventListener('resize', () => { resize(); });
-      function loop(now){
-        const dt = Math.min(40, now-last)/1000;
-        last = now;
-        ctx.clearRect(0,0,w,h);
-        for (let p of particles){
-          p.x += p.vx * (30*dt);
-          p.y += p.vy * (30*dt);
-          p.alpha += Math.sin(now*0.0005 + p.r) * 0.002;
-          if (p.x > w+20) p.x = -20;
-          if (p.x < -20) p.x = w+20;
-          if (p.y > h+30) p.y = -30;
-          ctx.beginPath();
-          const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r*6);
-          grad.addColorStop(0, 'rgba(125,211,252,'+ (p.alpha*0.9) +')');
-          grad.addColorStop(1, 'rgba(62,139,255,0)');
-          ctx.fillStyle = grad;
-          ctx.fillRect(p.x - p.r*6, p.y - p.r*6, p.r*12, p.r*12);
-        }
-        requestAnimationFrame(loop);
-      }
-      requestAnimationFrame(loop);
-    })();
-
-    // Accessibility: stop moving parts if reduced motion requested
-    if (prefersReduced){
-      // set static final shapes for waves (nice still image)
-      waveBack.setAttribute('d', 'M0,320 C450,300 950,320 1400,320 L1400,400 L0,400 Z');
-      waveMid.setAttribute('d', 'M0,330 C300,310 900,330 1400,330 L1400,400 L0,400 Z');
-      waveFront.setAttribute('d', 'M0,340 C200,320 1000,340 1400,340 L1400,400 L0,400 Z');
-    }
-
-    // Optimize: pause animation when not visible
-    let visible = true;
-    document.addEventListener('visibilitychange', ()=>{
-      visible = !document.hidden;
-      if (!visible) animator.stop();
-      else animator.start();
-    }, false);
-
-    // Slight entrance polish: fade in
-    requestAnimationFrame(()=>{
-      document.querySelector('.hero-inner').style.opacity = 0;
-      document.querySelector('.hero-inner').style.transition = 'opacity 420ms cubic-bezier(.2,.9,.3,1), transform 420ms';
-      requestAnimationFrame(()=> document.querySelector('.hero-inner').style.opacity = 1);
-    });
-  })();
-  </script>
 </body>
 </html>
