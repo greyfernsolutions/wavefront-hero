@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <title>BluePeak Local Optimization – Hero</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="BluePeak Local Optimization builds and maintains Google Business Profiles that drive more calls, visits, and leads — without agency bloat." />
 
   <!-- Inter font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,6 +20,8 @@
       --text-muted: #D0D4DF;
       --btn-bg: #FFFFFF;
       --btn-text: #0A1A2F;
+      --muted-border: rgba(148, 163, 184, 0.55);
+      --glass-bg: rgba(15, 23, 42, 0.84);
     }
 
     * {
@@ -30,21 +33,25 @@
     html, body {
       height: 100%;
       width: 100%;
-      overflow: hidden;
+      /* Allow normal scrolling — avoid hiding the viewport on mobile browsers */
+      overflow: auto;
       font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--navy);
+      color: var(--text-main);
     }
 
     body {
       display: flex;
       align-items: stretch;
       justify-content: center;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
 
     .hero-root {
       position: relative;
       width: 100%;
-      height: 100vh;
+      min-height: 72vh;
       max-height: 680px;
       color: var(--text-main);
       overflow: hidden;
@@ -62,6 +69,7 @@
       background-size: 160% 160%;
       animation: gradientShift 22s ease-in-out infinite alternate;
       filter: saturate(1.05);
+      pointer-events: none;
     }
 
     @keyframes gradientShift {
@@ -70,7 +78,7 @@
       100% { background-position: 100% 40%; }
     }
 
-    /* Floating orbs */
+    /* Floating orbs (decorative) */
     .orb {
       position: absolute;
       border-radius: 999px;
@@ -78,6 +86,7 @@
       mix-blend-mode: screen;
       opacity: 0.24;
       filter: blur(2px);
+      pointer-events: none;
     }
 
     .orb.orb-1 {
@@ -122,7 +131,7 @@
       100% { transform: translate3d(-36px, 6px, 0); }
     }
 
-    /* Grid lines */
+    /* Grid lines (decorative) */
     .grid-overlay {
       position: absolute;
       inset: 0;
@@ -190,6 +199,7 @@
     .hero-highlight {
       background: linear-gradient(120deg, #E5F0FF, #64A5FF);
       -webkit-background-clip: text;
+      background-clip: text;
       color: transparent;
     }
 
@@ -222,7 +232,7 @@
       letter-spacing: 0.02em;
       cursor: pointer;
       box-shadow: 0 14px 35px rgba(15, 23, 42, 0.42);
-      transition: 0.16s;
+      transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
       text-decoration: none;
       white-space: nowrap;
     }
@@ -237,6 +247,7 @@
       justify-content: center;
       color: white;
       font-size: 11px;
+      line-height: 1;
     }
 
     .btn-primary:hover {
@@ -253,12 +264,20 @@
       color: var(--text-muted);
       font-size: 13px;
       text-decoration: none;
-      transition: 0.16s;
+      transition: background 160ms ease, color 160ms ease;
     }
 
     .btn-ghost:hover {
       background: rgba(15, 23, 42, 0.85);
       color: #E5E7EB;
+    }
+
+    /* visible focus for keyboard users */
+    .btn-primary:focus-visible,
+    .btn-ghost:focus-visible {
+      outline: 3px solid rgba(99, 102, 241, 0.18);
+      outline-offset: 3px;
+      box-shadow: 0 8px 20px rgba(2,6,23,0.35);
     }
 
     .hero-meta {
@@ -288,8 +307,8 @@
       max-width: 340px;
       border-radius: 18px;
       padding: 16px 18px;
-      background: rgba(15, 23, 42, 0.84);
-      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: var(--glass-bg);
+      border: 1px solid var(--muted-border);
       box-shadow: 0 24px 60px rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(14px);
     }
@@ -318,6 +337,9 @@
       margin: 8px 0;
       font-size: 12px;
       color: #CBD5F5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .metric-label {
@@ -329,16 +351,20 @@
       margin-top: 10px;
       height: 58px;
       border-radius: 12px;
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.35), rgba(6, 182, 212, 0.16));
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.14), rgba(6, 182, 212, 0.08));
       overflow: hidden;
+      position: relative; /* CONTAIN the absolute sparkline line */
     }
 
+    /* Simpler cross-browser sparkline decoration (no clip-path:path) */
     .sparkline-line {
       position: absolute;
       inset: 0;
-      background-image: linear-gradient(to right, rgba(219,234,254,.9), rgba(219,234,254,0), rgba(219,234,254,.9));
+      pointer-events: none;
+      background-image: linear-gradient(90deg, rgba(219,234,254,0.9) 0%, rgba(219,234,254,0.0) 50%, rgba(219,234,254,0.9) 100%);
+      opacity: 0.95;
+      transform: translateX(0);
       animation: wobble 10s ease-in-out infinite alternate;
-      clip-path: path("M0,40 C40,10 80,50 120,18 C160,0 200,36 240,16 C280,6 320,32 360,20 L360,60 L0,60 Z");
     }
 
     @keyframes wobble {
@@ -355,23 +381,59 @@
       justify-content: space-between;
     }
 
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+      .hero-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 28px 5vw;
+        gap: 18px;
+      }
+
+      .hero-right {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 6px;
+      }
+
+      .panel {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      /* Reduce heavy decoration on small screens for performance and clarity */
+      .orb { display: none; }
+      .grid-overlay { opacity: 0.06; background-size: 64px 64px; }
+    }
+
+    /* Respect users' reduced motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-bg,
+      .orb,
+      .sparkline-line {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
   </style>
 </head>
 
 <body>
-  <div class="hero-root">
-    <div class="hero-bg"></div>
-    <div class="grid-overlay"></div>
+  <div class="hero-root" role="region" aria-label="Top of page — BluePeak Local Optimization">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="grid-overlay" aria-hidden="true"></div>
 
-    <div class="orb orb-1"></div>
-    <div class="orb orb-2"></div>
-    <div class="orb orb-3"></div>
+    <div class="orb orb-1" aria-hidden="true"></div>
+    <div class="orb orb-2" aria-hidden="true"></div>
+    <div class="orb orb-3" aria-hidden="true"></div>
 
     <div class="hero-inner">
 
       <div class="hero-left">
-        <div class="badge">
-          <div class="badge-dot"></div>
+        <div class="badge" aria-hidden="false">
+          <div class="badge-dot" aria-hidden="true"></div>
           <div class="badge-text">Google Business Profile Specialists</div>
         </div>
 
@@ -384,27 +446,27 @@
         </p>
 
         <div class="hero-actions">
-          <a href="#" class="btn-primary">
-            <span class="icon">↗</span>
+          <a href="#" class="btn-primary" role="button">
+            <span class="icon" aria-hidden="true">↗</span>
             <span>Run a Free Google Audit</span>
           </a>
-          <a href="#" class="btn-ghost">
+          <a href="#" class="btn-ghost" role="button">
             <span>See the $99 setup</span>
           </a>
         </div>
 
         <div class="hero-meta">
-          <span><span class="hero-meta-dot"></span> No contracts</span>
-          <span><span class="hero-meta-dot"></span> $99 setup</span>
-          <span><span class="hero-meta-dot"></span> $49/mo management</span>
+          <span><span class="hero-meta-dot" aria-hidden="true"></span> No contracts</span>
+          <span><span class="hero-meta-dot" aria-hidden="true"></span> $99 setup</span>
+          <span><span class="hero-meta-dot" aria-hidden="true"></span> $49/mo management</span>
         </div>
       </div>
 
       <div class="hero-right">
-        <div class="panel">
+        <div class="panel" role="region" aria-label="Local visibility overview">
           <div class="panel-header">
             <div class="panel-title">Local Visibility Overview</div>
-            <div class="status-pill">Optimized</div>
+            <div class="status-pill" aria-hidden="false">Optimized</div>
           </div>
 
           <div class="metric-row">
@@ -422,7 +484,7 @@
             <div class="metric-value">+41 visits</div>
           </div>
 
-          <div class="sparkline">
+          <div class="sparkline" aria-hidden="true">
             <div class="sparkline-line"></div>
           </div>
 
